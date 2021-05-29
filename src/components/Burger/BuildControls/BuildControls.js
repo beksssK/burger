@@ -12,16 +12,20 @@ const controls = [
 const BuildControls = (props) => {
   return (
     <div className="BurgerControls">
+      <p>Current Price: <strong>{props.totalPrice}</strong> KGS</p>
       {controls.map((ingredient, index) => {
           return (
             <BuildControl
-              addIngredientHandler={props.addIngredient}
+              disabled={props.disabledInfo[ingredient.type]}
+              addIngredientHandler={() => props.addIngredient(ingredient.type)}
+              removeIngredientHandler={() => props.removeIngredient(ingredient.type)}
               type={ingredient.type}
               key={index}
             />
             )
         }
       )}
+      <button className="OrderButton" disabled={!props.purchasable}>ORDER NOW</button>
     </div>
   );
 };

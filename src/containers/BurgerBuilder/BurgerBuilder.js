@@ -1,6 +1,8 @@
 import React from 'react';
 import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
+import Modal from "../../components/UI/Modal/Modal";
+import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
 
 const INGREDIENT_PRICES = {
   salad: 20,
@@ -19,7 +21,9 @@ class BurgerBuilder extends React.Component {
     },
     totalPrice: 20,
     purchasable: false,
+    purchasing: false,
   }
+  
   
   componentDidMount() {
     console.log("first console");
@@ -32,9 +36,8 @@ class BurgerBuilder extends React.Component {
     
     let oldPrice = this.state.totalPrice;
     let newPrice = oldPrice + INGREDIENT_PRICES[type];
-    
     this.setState({ ingredients: ingredients, totalPrice: newPrice });
-    this.updatePurchaseState();
+    this.updatePurchaseState(ingredients);
   }
   removeIngredientHandler = (type) => {
     let oldCount = this.state.ingredients[type];
@@ -50,11 +53,11 @@ class BurgerBuilder extends React.Component {
     let newPrice = oldPrice - INGREDIENT_PRICES[type];
     
     this.setState({ ingredients: ingredients, totalPrice: newPrice });
-    this.updatePurchaseState();
+    this.updatePurchaseState(ingredients);
   }
-  updatePurchaseState = () => {
-    let ingredientsCount = Object.keys(this.state.ingredients).map(key => {
-      return this.state.ingredients[key];
+  updatePurchaseState = (ingredients) => {
+    let ingredientsCount = Object.keys(ingredients).map(key => {
+      return ingredients[key];
     })
     
     let sum = ingredientsCount.reduce((acc, ingredientCount) => {
@@ -63,19 +66,49 @@ class BurgerBuilder extends React.Component {
     });
     this.setState({ purchasable: sum > 0 })
   }
-
-  render() {
+  
+  purchaseHandler = () => {
+    this.setState({purchasing: true});
+  };
+  
+  purchaseCancelHandler = () => {
+    this.setState({purchasing: false});
+  };
+  
+  purchaseContinueHandler = () => {
+    const queryParams = [];
     
-    console.log("hello")
+    for (let i in this.state.ingredients) {
+      let query = encodeURI(i) + "=" + encodeURI(this.state.ingredients[i]);
+      queryParams.push(query);
+    }
+    
+    this.props.history.push({
+      pathname: "/checkout",
+      search: "?" + queryParams.join("&"),
+    });
+  };
+  
+  render() {
     let disabledInfo = {...this.state.ingredients};
     for (let key in disabledInfo) {
       disabledInfo[key] = disabledInfo[key] <= 0;
     }
     return (
-      <>
-        <Burger ingredients={this.state.ingredients}/>
-        <BuildControls purchasable={this.state.purchasable} disabledInfo={disabledInfo} totalPrice={this.state.totalPrice} addIngredient={this.addIngredientHandler} removeIngredient={this.removeIngredientHandler}/>
-      </>
+        <>
+          <Burger ingredients={this.state.ingredients}/>
+          <BuildControls ordered={this.purchaseHandler} purchasable={this.state.purchasable} disabledInfo={disabledInfo} totalPrice={this.state.totalPrice} addIngredient={this.addIngredientHandler} removeIngredient={this.removeIngredientHandler}/>
+          <Modal show={this.state.purchasing}
+                 closed={this.purchaseCancelHandler}
+            >
+            <OrderSummary
+              ingredients={this.state.ingredients}
+              price={this.state.totalPrice}
+              purchaseCancelled={this.purchaseCancelHandler}
+              purchaseContinued={this.purchaseContinueHandler}
+            />
+          </Modal>
+        </>
     )
   }
 }

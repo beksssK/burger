@@ -1,5 +1,8 @@
 import React from "react";
 import CheckoutSummary from "../../components/Order/CheckoutSummary/CheckoutSummary";
+import {Route} from "react-router";
+import Contact from "./Contact";
+import "./Contact.css";
 
 class Checkout extends React.Component {
   state = {
@@ -10,7 +13,13 @@ class Checkout extends React.Component {
       bacon: 1
     }
   }
-  
+  continueHandler = () => {
+    console.log("check");
+    this.props.history.replace("/checkout/contact");
+  }
+  cancelHandler = () => {
+    this.props.history.goBack();
+  }
   componentDidMount() {
     const query = new URLSearchParams(this.props.location.search);
     const ingredients = {};
@@ -21,8 +30,20 @@ class Checkout extends React.Component {
   }
   
   render() {
-    return <CheckoutSummary
-              ingredients={this.state.ingredients}/>
+    console.log(this.props.match);
+    return (
+      <>
+          <CheckoutSummary
+                  ingredients={this.state.ingredients}
+                  continueOrder={this.continueHandler}
+                  cancelOrder={this.cancelHandler}
+                />
+          <Route
+            path={this.props.match.path + "/contact"}
+            render={(props) => (<Contact  ingredients={this.state.ingredients} />)}
+          />
+      </>
+    );
   }
 }
 

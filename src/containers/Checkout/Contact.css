@@ -22,3 +22,9 @@
   padding: 10px 15px;
   font-size: 18px;
 }
+
+.FormButton {
+  background: #bdc8c8;
+  padding: 5px 15px;
+  border-radius: 10px;
+}

@@ -11,7 +11,7 @@ const controls = [
 
 const BuildControls = (props) => {
   return (
-    <div className="BurgerControls">
+    <div className="BuildControls">
       <p>Current Price: <strong>{props.totalPrice}</strong> KGS</p>
       {controls.map((ingredient, index) => {
           return (

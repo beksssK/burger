@@ -40,7 +40,6 @@ class Contact extends React.Component {
   render() {
     return (
       <div className="Contact Container">
-        <h4>Enter Your Contact Data</h4>
         {this.state.loading ? <Spinner /> :
           (<div className="FormWrapper">
             <form action="#" onSubmit={this.handleSubmit}>

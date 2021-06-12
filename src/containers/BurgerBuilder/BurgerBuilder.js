@@ -3,7 +3,6 @@ import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 import Modal from "../../components/UI/Modal/Modal";
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
-import axios from "../../axios-orders";
 
 export const INGREDIENT_PRICES = {
   salad: 20,
@@ -24,10 +23,6 @@ class BurgerBuilder extends React.Component {
     purchasable: false,
     purchasing: false,
     orders: {}
-  }
-  
-  componentDidMount() {
-    console.log("first console");
   }
   
   addIngredientHandler = (type) => {
@@ -89,11 +84,6 @@ class BurgerBuilder extends React.Component {
       search: "?" + queryParams.join("&"),
     });
   };
-  getOrders = async () => {
-    const orders = await axios.get("/orders.json");
-    console.log(orders.data)
-    this.setState({orders: orders.data})
-  }
   render() {
     let disabledInfo = {...this.state.ingredients};
     for (let key in disabledInfo) {
@@ -102,7 +92,6 @@ class BurgerBuilder extends React.Component {
     return (
         <>
           {Object.keys(this.state.orders).map(order => {
-            console.log("key ", order);
             return (
               <div key={order}>
                 <p>{this.state.orders[order].customer.address}</p>
@@ -113,11 +102,9 @@ class BurgerBuilder extends React.Component {
                   })}
                 </ul>
                 }
-                
               </div>
             )
           })}
-          <button onClick={this.getOrders}>get Orders</button>
           <Burger ingredients={this.state.ingredients}/>
           <BuildControls ordered={this.purchaseHandler} purchasable={this.state.purchasable} disabledInfo={disabledInfo} totalPrice={this.state.totalPrice} addIngredient={this.addIngredientHandler} removeIngredient={this.removeIngredientHandler}/>
           <Modal show={this.state.purchasing}

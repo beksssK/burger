@@ -34,7 +34,7 @@ class Contact extends React.Component {
       }
     }
     await axios.post("/orders.json", data);
-    this.setState({loading: false})
+    this.setState({loading: false});
   }
   
   render() {

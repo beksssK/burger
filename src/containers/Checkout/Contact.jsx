@@ -37,11 +37,6 @@ class Contact extends React.Component {
     this.setState({loading: false})
   }
   
-  getOrders = async () => {
-    const response = await axios.get("/orders.json");
-    console.log(response.data);
-  }
-  
   render() {
     return (
       <div className="Contact Container">
@@ -78,8 +73,6 @@ class Contact extends React.Component {
                 value={this.state.postalCode}
                 placeholder="Postal code"/>
               <button className="Button FormButton">Submit</button>
-    
-              <button onClick={this.getOrders}>Get Orders</button>
             </form>
           </div>
           )

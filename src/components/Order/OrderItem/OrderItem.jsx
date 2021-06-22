@@ -9,6 +9,7 @@ const OrderItem = (props) => {
   const ingredientOutput = ingredients.map(ingredient => {
     return <span key={ingredient.name}> {ingredient.name}: {ingredient.amount}</span>
   });
+  if (Math.random() > 0.8) throw new Error("Well, error happened");
   return (
     <div className="OrderItem">
       <p>Ingredients: {ingredientOutput}</p>

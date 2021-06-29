@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "./../../axios-orders";
-import {INGREDIENT_PRICES} from "../BurgerBuilder/BurgerBuilder";
 import Spinner from "../../components/UI/Spinner/Spinner";
+import {connect} from "react-redux";
 
 class Contact extends React.Component {
   state = {
@@ -20,12 +20,9 @@ class Contact extends React.Component {
     
     this.setState({loading: true});
     
-    const price = Object.keys(this.props.ingredients).reduce((acc, ingredientKey) => {
-      return acc + this.props.ingredients[ingredientKey] * INGREDIENT_PRICES[ingredientKey]
-    }, 20);
     const data = {
       ingredients: this.props.ingredients,
-      price,
+      price: this.props.totalPrice,
       customer: {
         name: this.state.name,
         email: this.state.email,
@@ -82,4 +79,9 @@ class Contact extends React.Component {
   }
 }
 
-export default Contact;
+const mapStateToProps = state => ({
+  ingredients: state.bb.ingredients,
+  totalPrice: state.bb.totalPrice,
+})
+
+export default connect(mapStateToProps)(Contact);
